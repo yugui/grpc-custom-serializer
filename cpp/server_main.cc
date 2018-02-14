@@ -2,6 +2,7 @@
 #include <grpc++/grpc++.h>
 
 #include "greeter.grpc.pb.h"
+#include "serialization.h"
 
 DEFINE_string(addr, "0.0.0.0:5000", "addr to listen on");
 
