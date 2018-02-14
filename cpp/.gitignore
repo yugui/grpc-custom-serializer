@@ -2,3 +2,4 @@
 *.pb.cc
 *.o
 /greeter_server
+/greeter_client
