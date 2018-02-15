@@ -1,3 +1,5 @@
+// server is an example gRPC server application which encodes
+// messages in JSON instead of protobuf.
 package main
 
 import (
@@ -5,6 +7,7 @@ import (
 	"net"
 
 	"github.com/golang/glog"
+	_ "github.com/yugui/grpc-custom-serializer/go/encoding" // to register the JSON codec
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 

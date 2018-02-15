@@ -1,11 +1,15 @@
+// client is an example gRPC client application which encodes
+// messages in JSON instead of protobuf.
 package main
 
 import (
-	"context"
 	"flag"
+	"fmt"
+	"os"
 
 	"github.com/golang/glog"
-	xcontext "golang.org/x/net/context"
+	"github.com/yugui/grpc-custom-serializer/go/encoding"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
 	gpb "github.com/yugui/grpc-custom-serializer/go"
@@ -18,7 +22,9 @@ var (
 
 func greet(ctx context.Context, conn *grpc.ClientConn, name string) (string, error) {
 	client := gpb.NewGreeterClient(conn)
-	resp, err := client.Greet(ctx, &gpb.RequestProto{})
+	resp, err := client.Greet(ctx, &gpb.RequestProto{
+		Name: name,
+	})
 	if err != nil {
 		glog.Errorf("Server returned an error: %v", err)
 		return "", err
@@ -27,14 +33,24 @@ func greet(ctx context.Context, conn *grpc.ClientConn, name string) (string, err
 }
 
 func run(ctx context.Context) error {
-	conn, err := grpc.DialContext(ctx, *addr, grpc.WithInsecure())
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+		grpc.WithDefaultCallOptions(grpc.CallContentSubtype(encoding.Name)),
+	}
+	conn, err := grpc.DialContext(ctx, *addr, opts...)
 	if err != nil {
 		glog.Errorf("Failed to connect to the server %s: %v", *addr, err)
 		return err
 	}
 	defer conn.Close()
 
-	return greet(ctx, conn, *name)
+	msg, err := greet(ctx, conn, *name)
+	if err != nil {
+		glog.Errorf("Failed to call greeter: %v", err)
+		return err
+	}
+	_, err = fmt.Fprintln(os.Stdout, msg)
+	return err
 }
 
 func main() {
