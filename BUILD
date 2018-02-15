@@ -13,3 +13,10 @@ cc_proto_library(
     protos = [":greeter_proto_files"],
     visibility = ["//:__subpackages__"],
 )
+
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+gazelle(
+    name = "gazelle",
+    prefix = "github.com/yugui/grpc-custom-serializer",
+)
