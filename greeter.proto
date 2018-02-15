@@ -1,6 +1,8 @@
 syntax = "proto3";
 package greeter;
 
+option go_package = "greeterproto";
+
 message RequestProto {
 	string name = 1;
 }
