@@ -23,16 +23,16 @@ $ go get github.com/yugui/grpc-custom-serializer/go
 $ cd go
 $ go generate
 $ go build -o greeter_client github.com/yugui/grpc-custom-serializer/go/client
+$ go build -o greeter_server github.com/yugui/grpc-custom-serializer/go/server
 
-$ bazel-bin/cpp/greeter_server &
-$ ./greeter_client --name=$USER
+$ ./greeter_server -logtostderr &
+$ ./greeter_client -logtostderr -name=$USER
 ```
 
 # How to build with Bazel
 
 ```console
 $ bazel build //go/...
-$ bazel-bin/go/greeter_server &
-$ bazel-bin/go/greeter_client --name=$USER
+$ bazel-bin/go/server/darwin_amd64_stripped/server -logtostderr &
+$ bazel-bin/go/client/darwin_amd64_stripped/client -logtostderr -name=$USER
 ```
-
