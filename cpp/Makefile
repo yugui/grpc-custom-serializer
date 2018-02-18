@@ -1,5 +1,5 @@
 CXXFLAGS += -std=c++11
-LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++ grpc gflags`
+LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++ grpc gflags` -lglog
 
 PROTO=../greeter.proto
 GENFILES=greeter.pb.cc \

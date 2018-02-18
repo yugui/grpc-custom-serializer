@@ -9,6 +9,7 @@ cc_binary(
         ":serialization",
         "//:greeter_proto",
         "//external:gflags",
+        "//external:glog",
     ],
 )
 
@@ -19,6 +20,7 @@ cc_binary(
         ":serialization",
         "//:greeter_proto",
         "//external:gflags",
+        "//external:glog",
     ],
 )
 
@@ -28,6 +30,7 @@ cc_library(
     hdrs = ["serialization.h"],
     deps = [
         "//:greeter_proto",
+        "//external:glog",
         "@com_google_grpc//:grpc++",
         "@com_google_grpc//:grpc_codegen",
         "@com_google_protobuf//:protobuf",

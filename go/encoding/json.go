@@ -24,7 +24,7 @@ type codec struct {
 
 // Marshal marshals "v" into JSON.
 func (c *codec) Marshal(v interface{}) ([]byte, error) {
-	glog.V(2).Infof("marshaling data: %#v", v)
+	glog.V(2).Infof("marshaling data: %v", v)
 
 	if m, ok := v.(jsonpb.JSONPBMarshaler); ok {
 		glog.V(1).Infof("using custom marshaler for %T", v)
@@ -60,7 +60,13 @@ func (c *codec) Unmarshal(data []byte, v interface{}) error {
 		glog.V(1).Infof("Cannot unmarshal into %T: not a proto message", v)
 		return fmt.Errorf("not a proto message but %T: %v", v, v)
 	}
-	return c.u.Unmarshal(bytes.NewReader(data), msg)
+
+	if err := c.u.Unmarshal(bytes.NewReader(data), msg); err != nil {
+		glog.Errorf("Failed to unmarshal data: %v", err)
+		return err
+	}
+	glog.V(3).Infof("Deserialized data: %v", msg)
+	return nil
 }
 
 // Name returns the identifier of the codec.

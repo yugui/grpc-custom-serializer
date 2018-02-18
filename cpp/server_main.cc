@@ -1,4 +1,5 @@
 #include <gflags/gflags.h>
+#include <glog/logging.h>
 #include <grpc++/grpc++.h>
 
 #include "greeter.grpc.pb.h"
@@ -30,14 +31,17 @@ void RunService() {
   builder.AddListeningPort(FLAGS_addr, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
 
+  VLOG(1) << "starting server";
   const auto server(builder.BuildAndStart());
-  std::cerr << "Listening on " << FLAGS_addr << std::endl;
+  LOG(INFO) << "Listening on " << FLAGS_addr;
 
   server->Wait();
 }
 
 int main(int argc, char** argv) {
+  google::InitGoogleLogging(argv[0]);
   gflags::ParseCommandLineFlags(&argc, &argv, true);
+
   RunService();
   return 0;
 }

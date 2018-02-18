@@ -2,6 +2,7 @@
 #include <string>
 
 #include <gflags/gflags.h>
+#include <glog/logging.h>
 #include <grpc++/grpc++.h>
 
 #include "greeter.grpc.pb.h"
@@ -32,8 +33,8 @@ std::string GreeterClient::Greet(const std::string& name) {
   if (status.ok()) {
     return response.message();
   } else {
-    std::cerr << "Failed to call greeter.Greeter.Greet: " << status.error_code()
-              << ":" << status.error_message() << std::endl;
+    LOG(ERROR) << "Failed to call greeter.Greeter.Greet: "
+               << status.error_code() << ":" << status.error_message();
     return "";
   }
 }
@@ -48,7 +49,9 @@ void Run() {
 }
 
 int main(int argc, char** argv) {
+  google::InitGoogleLogging(argv[0]);
   gflags::ParseCommandLineFlags(&argc, &argv, true);
+
   Run();
   return 0;
 }

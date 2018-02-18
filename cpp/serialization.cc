@@ -1,5 +1,4 @@
-#include <iostream>
-
+#include <glog/logging.h>
 #include <google/protobuf/util/json_util.h>
 #include <grpc++/impl/codegen/config_protobuf.h>
 #include <grpc++/impl/codegen/slice.h>
@@ -9,16 +8,24 @@
 #include "serialization.h"
 
 namespace {
+std::ostream& operator<<(std::ostream& os,
+                         const grpc::protobuf::Message& msg) noexcept {
+  return os << msg.Utf8DebugString();
+}
+
 grpc::Status GenericJSONSerialize(const grpc::protobuf::Message& msg,
                                   grpc_byte_buffer** bp, bool* own_buffer) {
+  VLOG(2) << "serializing data: " << msg;
+
   std::string buf;
   const auto status = google::protobuf::util::MessageToJsonString(msg, &buf);
   if (!status.ok()) {
-    std::cerr << "Failed to serialize message: " << status.error_code() << ":"
-              << status.error_message() << std::endl;
+    VLOG(1) << "Failed to serialize message: " << status.error_code() << ":"
+            << status.error_message();
     return grpc::Status(grpc::StatusCode::INTERNAL,
                         "Failed to serialize message");
   }
+  VLOG(2) << "serialized data: " << buf;
 
   auto buf_slice = grpc::SliceFromCopiedString(buf);
   *bp = ::grpc_raw_byte_buffer_create(&buf_slice, 1);
@@ -32,23 +39,25 @@ grpc::Status GenericJSONDeserialize(grpc_byte_buffer* buffer,
                                     grpc::protobuf::Message* msg) {
   grpc_byte_buffer_reader reader;
   if (!grpc_byte_buffer_reader_init(&reader, buffer)) {
-    std::cerr << "Failed to initialize a buffer reader from "
-              << "an incoming message" << std::endl;
+    VLOG(1) << "Failed to initialize a buffer reader from "
+            << "an incoming message";
     return grpc::Status(grpc::StatusCode::INTERNAL, "Failed to read message");
   }
 
   auto buf_slice = grpc_byte_buffer_reader_readall(&reader);
-  const auto status = google::protobuf::util::JsonStringToMessage(
-      grpc::StringFromCopiedSlice(buf_slice), msg);
+  const auto data = grpc::StringFromCopiedSlice(buf_slice);
   grpc_slice_unref(buf_slice);
   grpc_byte_buffer_reader_destroy(&reader);
 
+  VLOG(2) << "Deserializing data: " << data;
+  const auto status = google::protobuf::util::JsonStringToMessage(data, msg);
   if (!status.ok()) {
-    std::cerr << "Failed to deserialize message: " << status.error_code() << ":"
-              << status.error_message() << std::endl;
+    VLOG(1) << "Failed to deserialize message: " << status.error_code() << ":"
+            << status.error_message() << std::endl;
     return grpc::Status(grpc::StatusCode::INTERNAL,
                         "Failed to deserialize message");
   }
+  VLOG(3) << "Deserialized data: " << *msg;
   return grpc::Status::OK;
 }
 }  // namespace

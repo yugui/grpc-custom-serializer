@@ -14,6 +14,12 @@ git_repository(
     tag = "v2.2.1",
 )
 
+git_repository(
+    name = "com_github_google_glog",
+    commit = "4c4631c9b3d20722fc11b18ca1d7a58fced99ef9",
+    remote = "https://github.com/google/glog",
+)
+
 load("@org_pubref_rules_protobuf//cpp:rules.bzl", "cpp_proto_repositories")
 
 cpp_proto_repositories()
@@ -21,6 +27,11 @@ cpp_proto_repositories()
 bind(
     name = "gflags",
     actual = "@com_github_gflags_gflags//:gflags",
+)
+
+bind(
+    name = "glog",
+    actual = "@com_github_google_glog//:glog",
 )
 
 # For golang
