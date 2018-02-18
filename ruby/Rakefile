@@ -1,0 +1,22 @@
+PROTO = "../greeter.proto"
+GENFILES = %w[
+  greeter_pb.rb
+  greeter_services_pb.rb
+]
+GRPC_PLUGIN = `which grpc_ruby_plugin`.chomp
+
+task :default => GENFILES
+
+file GENFILES[0] => PROTO do
+  sh 'protoc', '-I..', '--ruby_out=.', PROTO
+end
+
+file GENFILES[1] => PROTO do
+  sh 'protoc', '-I..',
+    "--plugin=protoc-gen-grpc=#{GRPC_PLUGIN}",
+    '--grpc_out=.', PROTO
+end
+
+task :clean do
+  rm_f GENFILES
+end
