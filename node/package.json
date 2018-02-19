@@ -1,0 +1,12 @@
+{
+  "name": "grpc-custom-serializer-example",
+  "version": "0.1.0",
+  "description": "Example application which shows how to use custom serialization in gRPC",
+  "main": "index.js",
+  "repository": "https://github.com/yugui/grpc-custom-serializer",
+  "author": "Yuki Yugui Sonoda",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "grpc": "^1.9.1"
+  }
+}
