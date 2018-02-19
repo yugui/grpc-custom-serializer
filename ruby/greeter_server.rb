@@ -4,7 +4,7 @@ require 'optparse'
 require 'grpc'
 
 require 'greeter_services_pb'
-require 'greeter_serialization'
+require 'json_serialization'
 
 # Implementation of Greeter service
 class GreeterServer < Greeter::Greeter::Service
@@ -35,6 +35,8 @@ end
 
 def run(argv)
   options = process_options(argv)
+
+  Greeter::Greeter::Service.use_json_marshaler
 
   server = GRPC::RpcServer.new
   server.add_http2_port(options.addr, :this_port_is_insecure)

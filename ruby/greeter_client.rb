@@ -4,7 +4,7 @@ require 'optparse'
 require 'grpc'
 
 require 'greeter_services_pb'
-require 'greeter_serialization'
+require 'json_serialization'
 
 # Wrapper of Greeter stub
 class GreeterClient
@@ -44,6 +44,7 @@ end
 def run(argv)
   args = process_options(argv)
 
+  Greeter::Greeter::Service.use_json_marshaler
   client = GreeterClient.new(args.addr)
   puts client.greet(args.name)
 rescue => ex
