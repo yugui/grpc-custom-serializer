@@ -1,23 +1,10 @@
+#!/usr/bin/ruby
+
 require 'logger'
 require 'optparse'
 
-require 'grpc'
-
-require 'greeter_services_pb'
-require 'json_serialization'
-
-# Wrapper of Greeter stub
-class GreeterClient
-  def initialize(addr)
-    @stub = Greeter::Greeter::Stub.new(addr, :this_channel_is_insecure)
-  end
-
-  def greet(name)
-    response = @stub.greet(Greeter::RequestProto.new(name: name))
-    return response.message
-  end
-end
-
+require 'greeter/client'
+require 'greeter/json_serialization'
 
 # Command line options
 Options = Struct.new(:addr, :name)
@@ -60,4 +47,3 @@ end
 if __FILE__ == $0
   run(ARGV)
 end
-

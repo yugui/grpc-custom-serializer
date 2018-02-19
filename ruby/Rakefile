@@ -1,22 +1,33 @@
-PROTO = "../greeter.proto"
+PROTO = 'greeter.proto'
+LIBDIR = 'lib/greeter'
+PLACED_PROTO = File.join(LIBDIR, PROTO)
 GENFILES = %w[
   greeter_pb.rb
   greeter_services_pb.rb
-]
+].map {|fname| File.join(LIBDIR, fname) }
+
 GRPC_PLUGIN = `which grpc_ruby_plugin`.chomp
 
+desc 'Generates files'
 task :default => GENFILES
 
-file GENFILES[0] => PROTO do
-  sh 'protoc', '-I..', '--ruby_out=.', PROTO
+file PLACED_PROTO => "../#{PROTO}" do |t|
+  ln_sf "../../../#{PROTO}", t.name
 end
 
-file GENFILES[1] => PROTO do
-  sh 'protoc', '-I..',
-    "--plugin=protoc-gen-grpc=#{GRPC_PLUGIN}",
-    '--grpc_out=.', PROTO
+desc 'proto message classes'
+file GENFILES[0] => PLACED_PROTO do
+  sh 'protoc', '-Ilib', '--ruby_out=lib', PLACED_PROTO
 end
 
+desc 'proto services'
+file GENFILES[1] => "#{LIBDIR}/#{PROTO}" do
+  sh 'protoc', '-Ilib',
+      "--plugin=protoc-gen-grpc=#{GRPC_PLUGIN}",
+      '--grpc_out=lib', PLACED_PROTO
+end
+
+desc 'Removes generated files'
 task :clean do
-  rm_f GENFILES
+  rm_f [*GENFILES, PLACED_PROTO]
 end

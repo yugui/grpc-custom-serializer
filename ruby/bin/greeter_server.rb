@@ -1,18 +1,10 @@
+#!/usr/bin/ruby
+
 require 'logger'
 require 'optparse'
 
-require 'grpc'
-
-require 'greeter_services_pb'
-require 'json_serialization'
-
-# Implementation of Greeter service
-class GreeterServer < Greeter::Greeter::Service
-  def greet(request, _)
-    Greeter::ResponseProto.new(message: "Hello, #{request.name}")
-  end
-end
-
+require 'greeter/server'
+require 'greeter/json_serialization'
 
 # Command line options
 Options = Struct.new(:addr)

@@ -26,6 +26,6 @@ $ bundle exec rake
 ## Run
 
 ```console
-$ bundle exec ruby -I. greeter_server.rb &
-$ bundle exec ruby -I. greeter_client.rb --name=$USER
+$ bundle exec ruby -Ilib bin/greeter_server.rb &
+$ bundle exec ruby -Ilib bin/greeter_client.rb --name=$USER
 ```

@@ -1,2 +1,3 @@
-/greeter_pb.rb
-/greeter_services_pb.rb
+/lib/greeter/greeter.proto
+/lib/greeter/greeter_pb.rb
+/lib/greeter/greeter_services_pb.rb
