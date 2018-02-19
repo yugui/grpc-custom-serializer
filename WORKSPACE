@@ -61,3 +61,8 @@ go_register_toolchains()
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
 gazelle_dependencies()
+
+# For Ruby
+load("@org_pubref_rules_protobuf//ruby:rules.bzl", "ruby_proto_repositories")
+
+ruby_proto_repositories()
