@@ -2,6 +2,7 @@ syntax = "proto3";
 package greeter;
 
 option go_package = "greeterproto";
+option java_package = "com.github.yugui.grpc_custom_serializer";
 
 message RequestProto {
 	string name = 1;
