@@ -1,0 +1,31 @@
+package(default_visibility = ["//visibility:private"])
+
+java_library(
+    name = "GreeterDescriptions",
+    srcs = ["GreeterDescriptions.java"],
+    deps = [
+        "//java/src/main/proto:greeter_proto",
+    ],
+)
+
+java_binary(
+    name = "GreeterClient",
+    srcs = ["GreeterClient.java"],
+    deps = [
+        ":GreeterDescriptions",
+        "//java/src/main/proto:greeter_proto",
+        "@args4j_args4j//jar",
+    ],
+)
+
+java_binary(
+    name = "GreeterServer",
+    srcs = ["GreeterServer.java"],
+    deps = [
+        ":GreeterDescriptions",
+        "//java/src/main/proto:greeter_proto",
+        "@args4j_args4j//jar",
+    ],
+)
+
+

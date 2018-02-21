@@ -1,0 +1,10 @@
+package(default_visibility = ["//java/src:__subpackages__"])
+
+load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
+
+java_proto_library(
+  name = "greeter_proto",
+  protos = ["greeter.proto"],
+  with_grpc = True,
+)
+

@@ -61,3 +61,15 @@ go_register_toolchains()
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
 gazelle_dependencies()
+
+# For Java
+load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_repositories")
+
+java_proto_repositories()
+
+maven_jar(
+    name = "args4j_args4j",
+    artifact = "args4j:args4j:2.33",
+    repository = "http://central.maven.org/maven2/",
+    sha1 = "bd87a75374a6d6523de82fef51fc3cfe9baf9fc9",
+)

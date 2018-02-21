@@ -8,7 +8,7 @@ import io.grpc.protobuf.ProtoUtils;
 
 final class GreeterDescriptions {
   static final MethodDescriptor<RequestProto, ResponseProto> METHOD_GREET =
-      GreeterGrpc.getGreetMethod()
+      GreeterGrpc.METHOD_GREET
           .toBuilder(
               ProtoUtils.jsonMarshaller(RequestProto.getDefaultInstance()),
               ProtoUtils.jsonMarshaller(ResponseProto.getDefaultInstance()))

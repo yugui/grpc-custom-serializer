@@ -28,3 +28,11 @@ $ mvn compile
 $ mvn exec:java -Dexec.mainClass=com.github.yugui.grpc_custom_serializer.GreeterServer&
 $ mvn exec:java -Dexec.mainClass=com.github.yugui.grpc_custom_serializer.GreeterClient -Dexec.args="-user $USER"
 ```
+
+# How to run with Bazel
+
+```console
+$ bazel build //java:all
+$ bazel-bin/java/src/main/java/com/github/yugui/grpc_custom_serializer/GreeterServer &
+$ bazel-bin/java/src/main/java/com/github/yugui/grpc_custom_serializer/GreeterClient -- -user $USER
+```
