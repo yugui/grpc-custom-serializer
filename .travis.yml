@@ -1,0 +1,42 @@
+os: linux
+dist: trusty
+sudo: false
+language: java
+jdk: oraclejdk9
+
+branches:
+  only:
+  - master
+
+before_cache:
+- rm -rf $HOME/.cache/bazel/_bazel_travis/install/
+cache:
+  directories:
+  - $HOME/local
+  - $HOME/.bazel
+  - $HOME/.cache/bazel
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - libstdc++6
+    - build-essential
+    - g++
+
+before_install:
+- .travis/install-bazel.sh 0.10.1
+- bazel version
+- bazel info
+- bazel fetch --curses=no -- "//..."
+install:
+- bazel build $BAZEL_BUILD_OPTS --show_progress_rate_limit 0 -- //...
+script:
+- find .
+
+
+env:
+  global:
+  - PATH=$PATH:$HOME/local/bin
+  - BAZEL_BUILD_OPTS="--curses=no --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures -j 20"
