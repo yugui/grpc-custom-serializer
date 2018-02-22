@@ -1,8 +1,6 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-
 package(default_visibility = ["//visibility:private"])
 
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@org_pubref_rules_protobuf//cpp:rules.bzl", "cc_proto_library")
 
 filegroup(
@@ -27,17 +25,7 @@ gazelle(
 proto_library(
     name = "greeterproto_proto",
     srcs = ["greeter.proto"],
+    visibility = ["//:__subpackages__"],
 )
 
-go_proto_library(
-    name = "greeterproto_go_proto",
-    compilers = ["@io_bazel_rules_go//proto:go_grpc"],
-    importpath = "greeterproto",
-    proto = ":greeterproto_proto",
-)
-
-go_library(
-    name = "go_default_library",
-    embed = [":greeterproto_go_proto"],
-    importpath = "greeterproto",
-)
+# gazelle:proto disable
