@@ -5,33 +5,27 @@ import static io.grpc.stub.ClientCalls.blockingUnaryCall;
 
 import com.github.yugui.grpc_custom_serializer.GreeterOuterClass.RequestProto;
 import com.github.yugui.grpc_custom_serializer.GreeterOuterClass.ResponseProto;
-
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
-
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import io.grpc.CallOptions;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.AbstractStub;
-
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 public final class GreeterClient {
-  private static final Logger logger =
-      Logger.getLogger(GreeterClient.class.getName());
+  private static final Logger logger = Logger.getLogger(GreeterClient.class.getName());
 
   private final ManagedChannel channel;
   private final GreeterStub stub;
 
   public GreeterClient(String host, int port) {
-    channel =
-        ManagedChannelBuilder.forAddress(host, port).usePlaintext(true).build();
+    channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext(true).build();
     stub = new GreeterStub(channel);
   }
 
@@ -41,8 +35,7 @@ public final class GreeterClient {
     try {
       return stub.greet(request).getMessage();
     } catch (StatusRuntimeException e) {
-      logger.log(Level.WARNING, "Failed to invoke greeter.Greeter.Greet: {0}",
-          e.getStatus());
+      logger.log(Level.WARNING, "Failed to invoke greeter.Greeter.Greet: {0}", e.getStatus());
       throw e;
     }
   }
@@ -54,7 +47,7 @@ public final class GreeterClient {
   public static void main(String[] args) throws Exception {
     final Options options = new Options();
     options.parse(args);
-        
+
     GreeterClient client = new GreeterClient(options.host, options.port);
     String message;
     try {
@@ -83,8 +76,7 @@ public final class GreeterClient {
     }
 
     ResponseProto greet(RequestProto request) {
-      return blockingUnaryCall(getChannel(), METHOD_GREET, getCallOptions(),
-          request);
+      return blockingUnaryCall(getChannel(), METHOD_GREET, getCallOptions(), request);
     }
   }
 

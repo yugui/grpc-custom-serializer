@@ -2,7 +2,6 @@ package com.github.yugui.grpc_custom_serializer;
 
 import com.github.yugui.grpc_custom_serializer.GreeterOuterClass.RequestProto;
 import com.github.yugui.grpc_custom_serializer.GreeterOuterClass.ResponseProto;
-
 import io.grpc.MethodDescriptor;
 import io.grpc.protobuf.ProtoUtils;
 

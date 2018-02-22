@@ -5,15 +5,6 @@ import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 
 import com.github.yugui.grpc_custom_serializer.GreeterOuterClass.RequestProto;
 import com.github.yugui.grpc_custom_serializer.GreeterOuterClass.ResponseProto;
-
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -21,11 +12,16 @@ import io.grpc.ServerCallHandler;
 import io.grpc.ServerServiceDefinition;
 import io.grpc.stub.ServerCalls.UnaryMethod;
 import io.grpc.stub.StreamObserver;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 public class GreeterServer {
 
-  private static Logger logger =
-      Logger.getLogger(GreeterServer.class.getName());
+  private static Logger logger = Logger.getLogger(GreeterServer.class.getName());
 
   private final int port;
   private final Server server;
@@ -40,14 +36,16 @@ public class GreeterServer {
     server.start();
     logger.log(Level.INFO, "Listening on {0}", port);
 
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        System.err.println("shutting down the GreeterServer");
-        GreeterServer.this.stop();
-        System.err.println("GreeterServer shut down");
-      }
-    });
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread() {
+              @Override
+              public void run() {
+                System.err.println("shutting down the GreeterServer");
+                GreeterServer.this.stop();
+                System.err.println("GreeterServer shut down");
+              }
+            });
   }
 
   public void stop() {
@@ -61,7 +59,7 @@ public class GreeterServer {
   public static void main(String[] args) throws Exception {
     final Options options = new Options();
     options.parse(args);
-    
+
     final GreeterServer server = new GreeterServer(options.port);
     try {
       server.start();
@@ -76,25 +74,25 @@ public class GreeterServer {
   public static class GreeterImpl implements BindableService {
     public ServerServiceDefinition bindService() {
       final ServerCallHandler<RequestProto, ResponseProto> greet =
-          asyncUnaryCall(new UnaryMethod<RequestProto, ResponseProto>() {
-            @Override
-            public void invoke(RequestProto request,
-                StreamObserver<ResponseProto> responseObserver) {
-              GreeterImpl.this.greet(request, responseObserver);
-            }
-          });
-      return ServerServiceDefinition
-          .builder(GreeterGrpc.getServiceDescriptor().getName())
-          .addMethod(METHOD_GREET, greet).build();
+          asyncUnaryCall(
+              new UnaryMethod<RequestProto, ResponseProto>() {
+                @Override
+                public void invoke(
+                    RequestProto request, StreamObserver<ResponseProto> responseObserver) {
+                  GreeterImpl.this.greet(request, responseObserver);
+                }
+              });
+      return ServerServiceDefinition.builder(GreeterGrpc.getServiceDescriptor().getName())
+          .addMethod(METHOD_GREET, greet)
+          .build();
     }
 
-    public void greet(RequestProto request,
-        StreamObserver<ResponseProto> responseObserver) {
+    public void greet(RequestProto request, StreamObserver<ResponseProto> responseObserver) {
       logger.log(Level.FINER, "request: {0}", request);
-      ResponseProto response = ResponseProto.newBuilder()
-          .setMessage("Hello " + request.getName()).build();
+      ResponseProto response =
+          ResponseProto.newBuilder().setMessage("Hello " + request.getName()).build();
       logger.log(Level.FINER, "response: {0}", response);
-          
+
       responseObserver.onNext(response);
       responseObserver.onCompleted();
     }
@@ -103,7 +101,7 @@ public class GreeterServer {
   private static class Options {
     @Option(name = "-port", usage = "port to listen")
     private int port = 5000;
-    
+
     private void parse(String[] args) {
       CmdLineParser parser = new CmdLineParser(this);
       try {
