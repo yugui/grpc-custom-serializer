@@ -26,11 +26,6 @@ type codec struct {
 func (c *codec) Marshal(v interface{}) ([]byte, error) {
 	glog.V(2).Infof("marshaling data: %#v", v)
 
-	if m, ok := v.(jsonpb.JSONPBMarshaler); ok {
-		glog.V(1).Infof("using custom marshaler for %T", v)
-		return m.MarshalJSONPB(&c.m)
-	}
-
 	msg, ok := v.(proto.Message)
 	if !ok {
 		glog.V(1).Infof("Cannot marshal %v: not a proto message", v)
@@ -49,11 +44,6 @@ func (c *codec) Marshal(v interface{}) ([]byte, error) {
 // Unmarshal unmarshals JSON-encoded data into "v".
 func (c *codec) Unmarshal(data []byte, v interface{}) error {
 	glog.V(2).Infof("unmarshaling data: %s", data)
-
-	if u, ok := v.(jsonpb.JSONPBUnmarshaler); ok {
-		glog.V(1).Infof("using custom unmarshaler for %v", v)
-		return u.UnmarshalJSONPB(&c.u, data)
-	}
 
 	msg, ok := v.(proto.Message)
 	if !ok {
